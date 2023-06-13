@@ -14,6 +14,7 @@ using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using System.Web;
+using System.IO;
 
 namespace FunctionApp4_net48
 {
@@ -21,13 +22,16 @@ namespace FunctionApp4_net48
     {
         [FunctionName("MyDurableFunction")]
         public static async Task RunOrchestrator(
-            [OrchestrationTrigger] IDurableOrchestrationContext context,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [DurableClient] IDurableOrchestrationContext context,
             ILogger log)
         {
             // Orchestration logic goes here
 
             // Example:
-            string input = context.GetInput<string>();
+            //string input = req.GetInput<string>();
+            string input = "req.GetInput<string>()";
+            string requestBody = await new StreamReader(req.InputStream).ReadToEndAsync();
             log.LogInformation($"Processing input: {input}");
 
             // Call activities or other orchestrations
@@ -38,6 +42,20 @@ namespace FunctionApp4_net48
             // Return the result
             await context.CallActivityAsync("MyResultFunction", result);
         }
+
+        [FunctionName(nameof(SayHello))]
+        public static async Task<string> SayHello([ActivityTrigger] string name, ILogger log)
+        {
+            OutputDebugString($"SLEEPING FOR {name}");
+            log.LogWarning($"SLEEPING FOR {name}");
+            //Thread.Sleep(10000);
+            await Task.Delay(3000);
+            OutputDebugString($"done sleeping for {name}");
+            log.LogWarning($"DONE SLEEPING FOR {name}");
+            log.LogInformation("Saying hello to {name}.", name);
+            return $"Hello {name}!";
+        }
+
 
         [FunctionName("MyActivityFunction")]
         public static string MyActivityFunction(
@@ -63,6 +81,9 @@ namespace FunctionApp4_net48
             // Example:
             log.LogInformation($"Handling result: {result}");
         }
+
+        [DllImport("kernel32", EntryPoint = "OutputDebugStringW", SetLastError = true, CharSet = CharSet.Unicode, ExactSpelling = true, CallingConvention = CallingConvention.StdCall)]
+        public static extern void OutputDebugString(string s);
     }
 }
 

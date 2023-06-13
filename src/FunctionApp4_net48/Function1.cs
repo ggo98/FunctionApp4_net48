@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -27,9 +28,21 @@ namespace FunctionApp4_net48
                 name = data?.name;
             }
 
+            /* marche plus après avoir ajouté
             return name == null
-                ? req.CreateResponse(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body")
-                : req.CreateResponse(HttpStatusCode.OK, "Hello " + name);
+                ? req.CreateResponse<string>(HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body", "text/plain")
+                : req.CreateResponse<string>(HttpStatusCode.OK, "Hello " + name, "text/plain");
+            */
+            return name == null
+                         ? CreateResponse(req, HttpStatusCode.BadRequest, "Please pass a name on the query string or in the request body", "text/plain")
+                         : CreateResponse(req, HttpStatusCode.OK, "Hello " + name, "text/plain");
+        }
+
+        private static HttpResponseMessage CreateResponse(HttpRequestMessage request, HttpStatusCode statusCode, string content, string contentType)
+        {
+            var response = new HttpResponseMessage(statusCode);
+            response.Content = new StringContent(content, Encoding.UTF8, contentType);
+            return response;
         }
     }
 }

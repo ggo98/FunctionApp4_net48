@@ -2,9 +2,10 @@
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <AzureFunctionsVersion>v1</AzureFunctionsVersion>
+    <UserSecretsId>f2ae69ff-fc98-478f-937b-66174ac3b579</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.DurableTask" Version="2.9.5" />
+    <PackageReference Include="Microsoft.Azure.WebJobs.Extensions.DurableTask" Version="2.1.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.24" />
   </ItemGroup>
   <ItemGroup>
