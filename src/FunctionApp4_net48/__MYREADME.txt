@@ -20,10 +20,11 @@ System.IO.FileNotFoundException: Could not load file or assembly 'Microsoft.Azur
 => probablement démarrer le node local.
 
 * Azure Storage Emulator:
-en .NET 4.8, Ca ne fonctionne pas avec Azurite.
+en .NET 4.8, Ca ne fonctionne pas avec Azurite on dirait.
 Il faut utiliser Azure Storage Emulator (à installer:
 https://go.microsoft.com/fwlink/?linkid=717179&clcid=0x409
 https://learn.microsoft.com/en-us/azure/storage/common/storage-use-emulator
+"C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator\AzureStorageEmulator.exe" start
 C:\Program Files (x86)\Microsoft SDKs\Azure\Storage Emulator>AzureStorageEmulator.exe start
 )
 Pour initialiser (la première fois):
